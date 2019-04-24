@@ -1,2 +1,5 @@
-.svn
-node_modules
+node_modules/
+*.zip
+demo.html
+!src/
+!index.html
