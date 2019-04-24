@@ -50,6 +50,6 @@
 					</body>
 					</html>
 		(3). 调整 package.json 文件, 确保我们安装包是 私有的(private), 并且移除 main 入口, 防止意外发布代码
-			
-
-    
+	4. 创建一个 bundle 文件
+		(1). 调整目录结构
+			在 webpack-demo 目录下新建 /dist/index.html 文件
