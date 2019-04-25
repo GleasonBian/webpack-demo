@@ -6,8 +6,7 @@
 
 import _ from 'lodash'
 import './style.css';
-import Icon from './icon.png';
-
+import Icon from './icon.png'
 /**
  * 创建 函数 component
  */
@@ -19,6 +18,12 @@ function component() {
   element.innerHTML = _.join(['hello', 'webpack'], ' ')
   element.classList.add('hello');
 
+  // 将图像添加到现有div
+  let myIcon = new Image();
+  myIcon.src = Icon;
+
+  element.appendChild(myIcon)
+  
   return element
 }
 
