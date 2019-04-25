@@ -6,7 +6,7 @@
 
 import _ from 'lodash'
 import './style.css';
-
+import Icon from './icon.png';
 
 /**
  * 创建 函数 component
