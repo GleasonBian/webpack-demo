@@ -131,6 +131,59 @@
 			git add .gitignore 
 			git commit -m "增加忽略文件 dist/")
 			git push origin master
+	8. webpack-demo/package.json 增加 build 脚本
+		  {
+					"name": "webpack-demo",
+					"version": "1.0.0",
+					"description": "",
+					"main": "index.js",
+					"scripts": {
+						"test": "echo \"Error: no test specified\" && exit 1",
+				+   "build": "webpack"
+					},
+					"keywords": [],
+					"author": "",
+					"license": "ISC",
+					"devDependencies": {
+						"webpack": "^4.0.1",
+						"webpack-cli": "^2.0.9",
+						"lodash": "^4.17.5"
+					}
+			}
+	9. 使用 npm run build 命令重新打包项目
+四. 管理资源
+	1. 安装
+		前期准备
+			将dist/index.html中title更改为 资源管理(由于dist文件夹已加入git忽略所以git无法捕捉dist下文件更改)
+	2. 加载CSS
+		(1). 安装 style-loader 和 css-loader
+		(2). 为了从 JavaScript 模块中 import 一个 CSS 文件需要在 webpack.config.js 中配置 module 
+				const path = require('path');
 
+				module.exports = {
+					entry: './src/index.js',
+					output: {
+						filename: 'bundle.js',
+						path: path.resolve(__dirname, 'dist')
+					},
+			+   module: {
+			+     rules: [
+			+       {
+			+         test: /\.css$/,
+			+         use: [
+			+           'style-loader',
+			+           'css-loader'
+			+         ]
+			+       }
+			+     ]
+			+   }
+				};
+			webpack 根据正则表达式，来确定应该查找哪些文件，并将其提供给指定的 loader。
+			在这种情况下，以 .css 结尾的全部文件，都将被提供给 style-loader 和 css-loader。
+		(3). 执行 npm run build 命令重新构建 
+			可能遇到问题:
+				浏览器中打开 dist/index.html 文件 hello webpack 颜色没有改变 或者没有东西 \
+			解决办法(这个问题遇见两次)
+				打开 dist/index.html 文件 将 <script> 脚本中 src 改成 src='bundle.js';
 
 		
