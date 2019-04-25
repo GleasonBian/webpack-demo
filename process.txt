@@ -155,7 +155,7 @@
 	1. 安装
 		前期准备
 			将dist/index.html中title更改为 资源管理(由于dist文件夹已加入git忽略所以git无法捕捉dist下文件更改)
-	2. 加载CSS
+	2. 加载 CSS
 		(1). 安装 style-loader 和 css-loader
 		(2). 为了从 JavaScript 模块中 import 一个 CSS 文件需要在 webpack.config.js 中配置 module 
 				const path = require('path');
@@ -180,10 +180,62 @@
 				};
 			webpack 根据正则表达式，来确定应该查找哪些文件，并将其提供给指定的 loader。
 			在这种情况下，以 .css 结尾的全部文件，都将被提供给 style-loader 和 css-loader。
-		(3). 执行 npm run build 命令重新构建 
-			可能遇到问题:
-				浏览器中打开 dist/index.html 文件 hello webpack 颜色没有改变 或者没有东西 \
-			解决办法(这个问题遇见两次)
-				打开 dist/index.html 文件 将 <script> 脚本中 src 改成 src='bundle.js';
+		(3). 执行 npm run build 命令重新构建
+	3. 加载 image
+		(1). 安装 file-loader 处理图片
+			npm install --save-dev file-loader
+		(2). 修改 webpack.config.js 
+					const path = require('path');
 
-		
+					module.exports = {
+						entry: './src/index.js',
+						output: {
+							filename: 'bundle.js',
+							path: path.resolve(__dirname, 'dist')
+						},
+						module: {
+							rules: [
+								{
+									test: /\.css$/,
+									use: [
+										'style-loader',
+										'css-loader'
+									]
+								},
+				+       {
+				+         test: /\.(png|svg|jpg|gif)$/,
+				+         use: [
+				+           'file-loader'
+				+         ]
+				+       }
+							]
+						}
+					};
+		(3). webpack-demo/src 添加 icon.png (图像任意)
+		(4). 修改 webpack-demo/index.js 			
+		  import _ from 'lodash';
+				import './style.css';
+			+ import Icon from './icon.png';
+
+				function component() {
+					var element = document.createElement('div');
+
+					// Lodash，现在由此脚本导入
+					element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+					element.classList.add('hello');
+
+			+   // 将图像添加到我们现有的 div。
+			+   var myIcon = new Image();
+			+   myIcon.src = Icon;
+			+
+			+   element.appendChild(myIcon);
+
+					return element;
+				}
+
+				document.body.appendChild(component());
+		(5). 重新 build 项目
+	4. 加载 字体
+		注: file-loader 和 url-loader 可以接收并加载任何文件，然后将其输出到构建目录。
+				这就是说，我们可以将它们用于任何类型的文件，包括字体。
+		(1). 
