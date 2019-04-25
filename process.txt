@@ -1,47 +1,47 @@
-×¢: ÏîÄ¿ÖĞ ×¢ÊÍ // - ****** ÆäÖĞ"-" ´ú±í ¸Ä±ä ºó½«ÕâĞĞ×¢ÊÍÉ¾³ı
-Ò». °²×°ÎÈ¶¨°æ node
-¶ş. °²×° webpack (½¨Òé±¾µØ°²×°)
-  1. ÌØ¶¨°æ±¾ »òÕß Ö¸¶¨°æ±¾
+æ³¨: é¡¹ç›®ä¸­ æ³¨é‡Š // - ****** å…¶ä¸­"-" ä»£è¡¨ æ”¹å˜ åå°†è¿™è¡Œæ³¨é‡Šåˆ é™¤
+ä¸€. å®‰è£…ç¨³å®šç‰ˆ node
+äºŒ. å®‰è£… webpack (å»ºè®®æœ¬åœ°å®‰è£…)
+  1. ç‰¹å®šç‰ˆæœ¬ æˆ–è€… æŒ‡å®šç‰ˆæœ¬
     npm install --save-dev webpack
     npm install --save-dev webpack@<version>
-  2. webpack4+ ĞèÒª°²×°webpack-cli
+  2. webpack4+ éœ€è¦å®‰è£…webpack-cli
     npm install --save-dev webpack-cli
-  3. webpack Í¨¹ıÔËĞĞÒ»¸ö»ò¶à¸ö npm scripts£¬»áÔÚ±¾µØ node_modules Ä¿Â¼ÖĞ²éÕÒ°²×°µÄ webpack
-Èı. Æğ²½
-  1. »ù±¾°²×°
-    (1). ´´½¨webpac-demoÄ¿Â¼²¢½øÈë¸ÃÎÄ¼ş¼Ğ: mkdir webpack-demo && cd webpack-demo
-    (2). ³õÊ¼»¯ npm: npm init -y
-    (3). ±¾µØ°²×° webpack¼°webpack-cli: npm install webpack webpack-cli --save-dev
-    (4). ÔÚ webpack-demo Ä¿Â¼ÏÂ´´½¨index.html: cd.>index.html
-    (5). ÔÚ webpack-demo Ä¿Â¼ÏÂ´´½¨ src ÎÄ¼ş¼Ğ: md src
-    (6). ÔÚ webpack-demo/src Ä¿Â¼ÏÂ´´½¨index.jsÎÄ¼ş:cd src && cd.>index.js
-    (7). ÍËÖÁ webpack-demo ¸ùÄ¿Â¼: cd..
-		(8). Ê¹ÓÃ VScode ´ò¿ª webpack-demo ÏîÄ¿: code .
-	2. ½« webpack-demo ¼ÓÈë°æ±¾¿ØÖÆ
-		(1). ³õÊ¼»¯git²Ö¿â: git init
-		(2). ÅäÖÃºöÂÔÎÄ¼ş: 
-			´´½¨ºöÂÔÎÄ¼ş: vim gitignore(½øÈëvimÄ£Ê½)
-			Ìí¼ÓºöÂÔ¹æÔò: node_modules/ *.zip demo.html !src/ !index.html
-			ÍË³ö vim Ä£Ê½: °´ esc ÊäÈë:wq µã»÷»Ø³µ
-	3. ´ò¿ª src/index.js Ìí¼ÓÈçÏÂ´úÂë
+  3. webpack é€šè¿‡è¿è¡Œä¸€ä¸ªæˆ–å¤šä¸ª npm scriptsï¼Œä¼šåœ¨æœ¬åœ° node_modules ç›®å½•ä¸­æŸ¥æ‰¾å®‰è£…çš„ webpack
+ä¸‰. èµ·æ­¥
+  1. åŸºæœ¬å®‰è£…
+    (1). åˆ›å»ºwebpac-demoç›®å½•å¹¶è¿›å…¥è¯¥æ–‡ä»¶å¤¹: mkdir webpack-demo && cd webpack-demo
+    (2). åˆå§‹åŒ– npm: npm init -y
+    (3). æœ¬åœ°å®‰è£… webpackåŠwebpack-cli: npm install webpack webpack-cli --save-dev
+    (4). åœ¨ webpack-demo ç›®å½•ä¸‹åˆ›å»ºindex.html: cd.>index.html
+    (5). åœ¨ webpack-demo ç›®å½•ä¸‹åˆ›å»º src æ–‡ä»¶å¤¹: md src
+    (6). åœ¨ webpack-demo/src ç›®å½•ä¸‹åˆ›å»ºindex.jsæ–‡ä»¶:cd src && cd.>index.js
+    (7). é€€è‡³ webpack-demo æ ¹ç›®å½•: cd..
+		(8). ä½¿ç”¨ VScode æ‰“å¼€ webpack-demo é¡¹ç›®: code .
+	2. å°† webpack-demo åŠ å…¥ç‰ˆæœ¬æ§åˆ¶
+		(1). åˆå§‹åŒ–gitä»“åº“: git init
+		(2). é…ç½®å¿½ç•¥æ–‡ä»¶: 
+			åˆ›å»ºå¿½ç•¥æ–‡ä»¶: vim gitignore(è¿›å…¥vimæ¨¡å¼)
+			æ·»åŠ å¿½ç•¥è§„åˆ™: node_modules/ *.zip demo.html !src/ !index.html
+			é€€å‡º vim æ¨¡å¼: æŒ‰ esc è¾“å…¥:wq ç‚¹å‡»å›è½¦
+	3. æ‰“å¼€ src/index.js æ·»åŠ å¦‚ä¸‹ä»£ç 
 		(1). function component() {
-						// ´´½¨ div ÔªËØ
+						// åˆ›å»º div å…ƒç´ 
 						let element = document.createElement('div')
 
-						// lodash (Ä¿Ç°ÔÚ index.html ÖĞÍ¨¹ıÒ»¸ö script ½Å±¾ÒıÈë) ¶ÔÓÚÖ´ĞĞÕâÒ»Ïî±ØĞëµÄ 
+						// lodash (ç›®å‰åœ¨ index.html ä¸­é€šè¿‡ä¸€ä¸ª script è„šæœ¬å¼•å…¥) å¯¹äºæ‰§è¡Œè¿™ä¸€é¡¹å¿…é¡»çš„ 
 						element.innerHTML = _.join(['hello', 'webpack'], '')
 
 						return element
 					}
 					document.body.appendChild(component())
-		(2). ÔÚ index.js ÖĞÒıÈë lodash ºÍ src/index.js
+		(2). åœ¨ index.js ä¸­å¼•å…¥ lodash å’Œ src/index.js
 					<!DOCTYPE html>
 					<html lang="en">
 					<head>
 						<meta charset="UTF-8">
 						<meta name="viewport" content="width=device-width, initial-scale=1.0">
 						<meta http-equiv="X-UA-Compatible" content="ie=edge">
-						<title>Æğ²½</title>
+						<title>èµ·æ­¥</title>
 						<script src="https://unpkg.com/lodash@4.16.6">
 						</script>
 					</head>
@@ -50,15 +50,15 @@
 						</script>
 					</body>
 					</html>
-		(3). µ÷Õû package.json ÎÄ¼ş, È·±£ÎÒÃÇ°²×°°üÊÇ Ë½ÓĞµÄ(private), ²¢ÇÒÒÆ³ı main Èë¿Ú, ·ÀÖ¹ÒâÍâ·¢²¼´úÂë
-	4. ´´½¨Ò»¸ö bundle ÎÄ¼ş
-		(1). µ÷ÕûÄ¿Â¼½á¹¹
-			ÔÚ webpack-demo Ä¿Â¼ÏÂĞÂ½¨ /dist/index.html ÎÄ¼ş É¾³ı webpack/index.html ÎÄ¼ş
-		(2). ÔÚ index.js ÖĞ ´ò°ü lodash ÒÀÀµ ĞèÔÚ±¾µØ°²×° library 
+		(3). è°ƒæ•´ package.json æ–‡ä»¶, ç¡®ä¿æˆ‘ä»¬å®‰è£…åŒ…æ˜¯ ç§æœ‰çš„(private), å¹¶ä¸”ç§»é™¤ main å…¥å£, é˜²æ­¢æ„å¤–å‘å¸ƒä»£ç 
+	4. åˆ›å»ºä¸€ä¸ª bundle æ–‡ä»¶
+		(1). è°ƒæ•´ç›®å½•ç»“æ„
+			åœ¨ webpack-demo ç›®å½•ä¸‹æ–°å»º /dist/index.html æ–‡ä»¶ åˆ é™¤ webpack/index.html æ–‡ä»¶
+		(2). åœ¨ index.js ä¸­ æ‰“åŒ… lodash ä¾èµ–( éœ€åœ¨æœ¬åœ°å®‰è£… library )
 			npm install --save lodash
-			×¢Òâ: °²×°Ò»¸öÓÃÓÚ´ò°üµ½Éú²ú»·¾³µÄ°²×°°üÊ±£¬Ê¹ÓÃ npm install --save£¬
-						°²×°Ò»¸öÓÃÓÚ¿ª·¢»·¾³µÄ°²×°°ü£¨ÀıÈç£¬linter, ²âÊÔ¿âµÈ£©£¬ÄãÓ¦¸ÃÊ¹ÓÃ npm install --save-dev
-		(3). ÔÚ src/index.js ÖĞ import lodash
+			æ³¨æ„: å®‰è£…ä¸€ä¸ªç”¨äºæ‰“åŒ…åˆ°ç”Ÿäº§ç¯å¢ƒçš„å®‰è£…åŒ…æ—¶ï¼Œä½¿ç”¨ npm install --saveï¼Œ
+						å®‰è£…ä¸€ä¸ªç”¨äºå¼€å‘ç¯å¢ƒçš„å®‰è£…åŒ…ï¼ˆä¾‹å¦‚ï¼Œlinter, æµ‹è¯•åº“ç­‰ï¼‰ï¼Œä½ åº”è¯¥ä½¿ç”¨ npm install --save-dev
+		(3). åœ¨ src/index.js ä¸­ import lodash
 				+ import _ from 'lodash';
 				+
 					function component() {
@@ -72,14 +72,14 @@
 					}
 
 					document.body.appendChild(component());
-		(4). ¸üĞÂ index.html
-			ÓÉÓÚÏÖÔÚÍ¨¹ı import ÒıÈë lodash ËùÒÔ½« dist/index.html ÖĞ <script> ±êÇ©É¾³ı
-			È»ºóĞŞ¸ÄÁíÒ»¸ö <script> ±êÇ©À´¼ÓÔØ bundle ¶ø²»ÊÇÔ­Ê¼µÄ /src ÎÄ¼ş:
+		(4). æ›´æ–° index.html
+			ç”±äºç°åœ¨é€šè¿‡ import å¼•å…¥ lodash æ‰€ä»¥å°† dist/index.html ä¸­ <script> æ ‡ç­¾åˆ é™¤
+			ç„¶åä¿®æ”¹å¦ä¸€ä¸ª <script> æ ‡ç­¾æ¥åŠ è½½ bundle è€Œä¸æ˜¯åŸå§‹çš„ /src æ–‡ä»¶:
 			dist/index.html
 					<!doctype html>
 					<html>
 					 <head>
-						 <title>Æğ²½</title>
+						 <title>èµ·æ­¥</title>
 				-    <script src="https://unpkg.com/lodash@4.16.6"></script>
 					 </head>
 					 <body>
