@@ -4,8 +4,8 @@
  *  然后使用图生成一个优化过的，会以正确顺序执行的 bundle。
  */
 
-// import lodash
 import _ from 'lodash'
+import './style.css';
 
 
 /**
@@ -17,6 +17,7 @@ function component() {
   // - lodash (目前通过一个 script 脚本引入) 对于执行这一项必须的
   // lodash, now imported by this script(lodash 现在由脚本引入)
   element.innerHTML = _.join(['hello ', ' webpack'], ' ')
+  element.classList.add('hello');
 
   return element
 }
