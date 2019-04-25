@@ -1,3 +1,4 @@
+注: 项目中 注释 // - ****** 其中"-" 代表 改变 后将这行注释删除
 一. 安装稳定版 node
 二. 安装 webpack (建议本地安装)
   1. 特定版本 或者 指定版本
@@ -58,4 +59,31 @@
 			注意: 安装一个用于打包到生产环境的安装包时，使用 npm install --save，
 						安装一个用于开发环境的安装包（例如，linter, 测试库等），你应该使用 npm install --save-dev
 		(3). 在 src/index.js 中 import lodash
-			
+				+ import _ from 'lodash';
+				+
+					function component() {
+						var element = document.createElement('div');
+
+				-   // Lodash, currently included via a script, is required for this line to work
+				+   // Lodash, now imported by this script
+						element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+
+						return element;
+					}
+
+					document.body.appendChild(component());
+		(4). 更新 index.html
+			由于现在通过 import 引入 lodash 所以将 dist/index.html 中 <script> 标签删除
+			然后修改另一个 <script> 标签来加载 bundle 而不是原始的 /src 文件:
+			dist/index.html
+					<!doctype html>
+					<html>
+					 <head>
+						 <title>起步</title>
+				-    <script src="https://unpkg.com/lodash@4.16.6"></script>
+					 </head>
+					 <body>
+				-    <script src="./src/index.js"></script>
+				+    <script src="main.js"></script>
+					 </body>
+					</html>
