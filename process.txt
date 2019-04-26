@@ -458,4 +458,7 @@
 
 				document.body.appendChild(component());
 五. 管理输出
-	
+	(1). 增加 src/prinit.js
+		export default function printMe() {
+			console.log('I get called from print.js!');
+		}
