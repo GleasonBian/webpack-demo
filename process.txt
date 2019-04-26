@@ -524,5 +524,69 @@
 					生成的包将被重命名在一个构建中，然而 index.html 文件仍然会引用旧的名字。
 			 解决: 
 					使用 HtmlWebpackPlugin 来解决这个问题。
-	(7). 设定 htmlWebpackPlugin 
+	(7). 安装htmlWebpackPlugin 
 		安装 html-webpack-plugin 插件 npm install --save-dev html-webpack-plugin 
+	(8). 配置 webpack.config.js
+				const path = require('path');
+			+ const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+				module.exports = {
+					entry: {
+						app: './src/index.js',
+						print: './src/print.js'
+					},
+			+   plugins: [
+			+     new HtmlWebpackPlugin({
+			+       title: 'Output Management'
+			+     })
+			+   ],
+					output: {
+						filename: '[name].bundle.js',
+						path: path.resolve(__dirname, 'dist')
+					}
+				};
+	(10). 清理 /dist 文件夹
+		安装 clean-webpack-plugin 插件 
+				npm install clean-webpack-plugin --save-dev
+		更新 webpack.config.js 配置
+					const path = require('path');
+					const HtmlWebpackPlugin = require('html-webpack-plugin');
+				+ const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+					module.exports = {
+						entry: {
+							app: './src/index.js',
+							print: './src/print.js'
+						},
+						plugins: [
+				+     new CleanWebpackPlugin(['dist']),
+							new HtmlWebpackPlugin({
+								title: 'Output Management'
+							})
+						],
+						output: {
+							filename: '[name].bundle.js',
+							path: path.resolve(__dirname, 'dist')
+						}
+					};
+			const path = require('path');
+			const HtmlWebpackPlugin = require('html-webpack-plugin');
+			const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+			module.exports = {
+				entry: {
+					app: './src/index.js',
+					print: './src/print.js'
+				},
+		+   devtool: 'inline-source-map',
+				plugins: [
+					new CleanWebpackPlugin(),  // 这里需要注意 clean-webpack-plugin^2.0.1版本中 new CleanWebpackPlugin(['dist']) 写法不支持 默认会清理 output 中定义的文件夹 更省事了
+					new HtmlWebpackPlugin({
+						title: 'Development'
+					})
+				],
+				output: {
+					filename: '[name].bundle.js',
+					path: path.resolve(__dirname, 'dist')
+				}
+			};
