@@ -7,6 +7,7 @@
 import _ from 'lodash'
 import './style.css';
 import Icon from './icon.png'
+import Data from './data.xml'
 /**
  * 创建 函数 component
  */
@@ -24,6 +25,8 @@ function component() {
 
   element.appendChild(myIcon)
   
+  console.log(Data);
+
   return element
 }
 

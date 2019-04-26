@@ -291,11 +291,58 @@
 		加载数据如 JSON 文件，CSV、TSV 和 XML。类似于 NodeJS，JSON 支持实际上是内置的，
 		也就是说 import Data from './data.json' 默认将正常运行。
 		要导入 CSV、TSV 和 XML，可以使用 csv-loader 和 xml-loader 处理这三类文件
-		(1). 增加 src/data.xml 文件
-			<?xml version="1.0" encoding="UTF-8"?>
-			<note>
-				<to>Mary</to>
-				<from>John</from>
-				<heading>Reminder</heading>
-				<body>Call Cindy on Tuesday</body>
-			</note>
+		(1). 安装 解析csv xml loader 解析插件
+			npm install --save-dev csv-loader xml-loader
+		(2). 配置 webpack.config.js 
+					const path = require('path');
+
+					module.exports = {
+						entry: './src/index.js',
+						output: {
+							filename: 'bundle.js',
+							path: path.resolve(__dirname, 'dist')
+						},
+						module: {
+							rules: [
+								{
+									test: /\.css$/,
+									use: [
+										'style-loader',
+										'css-loader'
+									]
+								},
+								{
+									test: /\.(png|svg|jpg|gif)$/,
+									use: [
+										'file-loader'
+									]
+								},
+								{
+									test: /\.(woff|woff2|eot|ttf|otf)$/,
+									use: [
+										'file-loader'
+									]
+								},
+				+       {
+				+         test: /\.(csv|tsv)$/,
+				+         use: [
+				+           'csv-loader'
+				+         ]
+				+       },
+				+       {
+				+         test: /\.xml$/,
+				+         use: [
+				+           'xml-loader'
+				+         ]
+				+       }
+							]
+						}
+					};
+		(4). 增加 src/data.xml 文件
+				<?xml version="1.0" encoding="UTF-8"?>
+				<note>
+					<to>Mary</to>
+					<from>John</from>
+					<heading>Reminder</heading>
+					<body>Call Cindy on Tuesday</body>
+				</note>
