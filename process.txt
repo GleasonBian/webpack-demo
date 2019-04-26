@@ -238,4 +238,64 @@
 	4. 加载 字体
 		注: file-loader 和 url-loader 可以接收并加载任何文件，然后将其输出到构建目录。
 				这就是说，我们可以将它们用于任何类型的文件，包括字体。
-		(1). 
+		(1). 添加字体文件 font.ttf 文件到src文件夹下 可以在 https://github.com/GleasonBian/webpack-demo 下载
+		(2). webpack.config.js
+					const path = require('path');
+
+					module.exports = {
+						entry: './src/index.js',
+						output: {
+							filename: 'bundle.js',
+							path: path.resolve(__dirname, 'dist')
+						},
+						module: {
+							rules: [
+								{
+									test: /\.css$/,
+									use: [
+										'style-loader',
+										'css-loader'
+									]
+								},
+								{
+									test: /\.(png|svg|jpg|gif)$/,
+									use: [
+										'file-loader'
+									]
+								},
+				+       {
+				+         test: /\.(woff|woff2|eot|ttf|otf)$/,
+				+         use: [
+				+           'file-loader'
+				+         ]
+				+       }
+							]
+						}
+					};
+		(3). src/style.css
+			+ @font-face {
+			+   font-family: 'MyFont';
+			+   src:  url('./my-font.woff2') format('woff2'),
+			+         url('./my-font.woff') format('woff');
+			+   font-weight: 600;
+			+   font-style: normal;
+			+ }
+
+				.hello {
+					color: red;
+			+   font-family: 'MyFont';
+					background: url('./icon.png');
+				}
+		(4). 执行 npm run build 打包
+	5. 加载数据
+		加载数据如 JSON 文件，CSV、TSV 和 XML。类似于 NodeJS，JSON 支持实际上是内置的，
+		也就是说 import Data from './data.json' 默认将正常运行。
+		要导入 CSV、TSV 和 XML，可以使用 csv-loader 和 xml-loader 处理这三类文件
+		(1). 增加 src/data.xml 文件
+			<?xml version="1.0" encoding="UTF-8"?>
+			<note>
+				<to>Mary</to>
+				<from>John</from>
+				<heading>Reminder</heading>
+				<body>Call Cindy on Tuesday</body>
+			</note>
