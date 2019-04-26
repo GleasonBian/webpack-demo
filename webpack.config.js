@@ -9,6 +9,7 @@ module.exports = {
     app: './src/index.js',
     print: './src/print.js'
   },
+  devtool: 'inline-source-map',
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Output management'
@@ -19,5 +20,4 @@ module.exports = {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
-
 }
