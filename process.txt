@@ -577,10 +577,9 @@
 				entry: {
 					app: './src/index.js',
 					print: './src/print.js'
-				},
-		+   devtool: 'inline-source-map',
+				}
 				plugins: [
-					new CleanWebpackPlugin(),  // 这里需要注意 clean-webpack-plugin^2.0.1版本中 new CleanWebpackPlugin(['dist']) 写法不支持 默认会清理 output 中定义的文件夹 更省事了
+					new CleanWebpackPlugin(),  // 这里需要注意 clean-webpack-plugin^2.0.1版本中 new CleanWebpackPlugin(['dist']) 写法不支持, 默认会清理 output 中定义的文件夹 更省事了
 					new HtmlWebpackPlugin({
 						title: 'Development'
 					})
@@ -590,3 +589,140 @@
 					path: path.resolve(__dirname, 'dist')
 				}
 			};
+六. 开发
+	(1). 使用 source map 追踪错误和警告
+		作用: 将编译后的代码映射回原始源代码。如果一个错误来自于 b.js，source map 就会明确的告诉你。
+		配置 inline-source-map 选项 (不要用于生产环境)
+		webpack.config.js
+
+			const path = require('path');
+				const HtmlWebpackPlugin = require('html-webpack-plugin');
+				const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+				module.exports = {
+					entry: {
+						app: './src/index.js',
+						print: './src/print.js'
+					},
+			+   devtool: 'inline-source-map',
+					plugins: [
+						new CleanWebpackPlugin(['dist']),
+						new HtmlWebpackPlugin({
+							title: 'Development'
+						})
+					],
+					output: {
+						filename: '[name].bundle.js',
+						path: path.resolve(__dirname, 'dist')
+					}
+				};
+	(2). 在 print.js 文件中生成一个错误
+		src/print.js
+				export default function printMe() {
+			-   console.log('I get called from print.js!');
+			+   cosnole.error('I get called from print.js!');
+				}
+	(3). 运行 npm run build 命令 打开控制台 查看
+		Uncaught ReferenceError: cosnole is not defined
+    at HTMLButtonElement.e (print.js:4)
+		错误原因: Uncaught ReferenceError: cosnole is not defined at HTMLButtonElement.e
+		错误位置: (print.js:4) 错误位置在 print.js 文件的第四行
+	(4). 使用观察模式
+		1. 在 package.json 添加一个用于启动 webpack 的观察模式的 npm script 脚本
+				{
+					"name": "development",
+					"version": "1.0.0",
+					"description": "",
+					"main": "webpack.config.js",
+					"scripts": {
+						"test": "echo \"Error: no test specified\" && exit 1",
+			+     "watch": "webpack --watch",
+						"build": "webpack"
+					},
+					"keywords": [],
+					"author": "",
+					"license": "ISC",
+					"devDependencies": {
+						"clean-webpack-plugin": "^0.1.16",
+						"css-loader": "^0.28.4",
+						"csv-loader": "^2.1.1",
+						"file-loader": "^0.11.2",
+						"html-webpack-plugin": "^2.29.0",
+						"style-loader": "^0.18.2",
+						"webpack": "^3.0.0",
+						"xml-loader": "^1.2.1"
+					}
+				}
+		2. 执行 npm run watch 命令 观察控制台
+	(5). 使用 webpack-dev-server
+		1. 作用: webpack-dev-server 为你提供了一个简单的 web 服务器，并且能够实时重新加载(live reloading)。
+		2. 安装: npm install --save-dev webpack-dev-server
+		3. 更行 webpack.config.js 配置
+					const path = require('path');
+					const HtmlWebpackPlugin = require('html-webpack-plugin');
+					const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+					module.exports = {
+						entry: {
+							app: './src/index.js',
+							print: './src/print.js'
+						},
+						devtool: 'inline-source-map',
+				+   devServer: {
+				+     contentBase: './dist'
+				+   },
+						plugins: [
+							new CleanWebpackPlugin(['dist']),
+							new HtmlWebpackPlugin({
+								title: 'Development'
+							})
+						],
+						output: {
+							filename: '[name].bundle.js',
+							path: path.resolve(__dirname, 'dist')
+						}
+					};
+		4. 更新 package.json 配置
+				{
+					"name": "development",
+					"version": "1.0.0",
+					"description": "",
+					"main": "webpack.config.js",
+					"scripts": {
+						"test": "echo \"Error: no test specified\" && exit 1",
+						"watch": "webpack --watch",
+			+     "start": "webpack-dev-server --open",
+						"build": "webpack"
+					},
+					"keywords": [],
+					"author": "",
+					"license": "ISC",
+					"devDependencies": {
+						"clean-webpack-plugin": "^0.1.16",
+						"css-loader": "^0.28.4",
+						"csv-loader": "^2.1.1",
+						"file-loader": "^0.11.2",
+						"html-webpack-plugin": "^2.29.0",
+						"style-loader": "^0.18.2",
+						"webpack": "^3.0.0",
+						"xml-loader": "^1.2.1"
+					}
+				}
+		5. 执行 npm start 命令 
+			浏览器自动加载页面, 如果修改 和 保存任意源文件 web 服务器就会自动重新加载编译后的代码
+		5. webpack-dev-server 更多配置文档
+				https://www.webpackjs.com/configuration/dev-server/	
+
+
+
+
+
+
+
+
+
+
+
+
+			
+

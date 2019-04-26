@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --open"
   },
   "keywords": [],
   "author": "gleasonBian",
@@ -21,6 +22,7 @@
     "style-loader": "^0.23.1",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.1",
+    "webpack-dev-server": "^3.3.1",
     "xml-loader": "^1.2.1"
   },
   "dependencies": {
