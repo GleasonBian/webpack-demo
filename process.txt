@@ -657,7 +657,7 @@
 	(5). 使用 webpack-dev-server
 		1. 作用: webpack-dev-server 为你提供了一个简单的 web 服务器，并且能够实时重新加载(live reloading)。
 		2. 安装: npm install --save-dev webpack-dev-server
-		3. 更行 webpack.config.js 配置
+		3. 更新 webpack.config.js 配置
 					const path = require('path');
 					const HtmlWebpackPlugin = require('html-webpack-plugin');
 					const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -711,10 +711,140 @@
 		5. 执行 npm start 命令 
 			浏览器自动加载页面, 如果修改 和 保存任意源文件 web 服务器就会自动重新加载编译后的代码
 		5. webpack-dev-server 更多配置文档
-				https://www.webpackjs.com/configuration/dev-server/	
+				https://www.webpackjs.com/configuration/dev-server/
+	(6). 使用 webpack-dev-middleware 中间件
+		1. 作用:
+			webpack-dev-middleware 是一个容器(wrapper)，它可以把 webpack 处理后的文件传递给一个服务器(server)。 
+			webpack-dev-server 在内部使用了它，同时，它也可以作为一个单独的包来使用，以便进行更多自定义设置来实现更多的需求。
+		2. 安装 express 和 webpack-dev-middleware
+			npm install --save-dev express webpack-dev-middleware
+		3. 配置 webpack.config.js
+					const path = require('path');
+					const HtmlWebpackPlugin = require('html-webpack-plugin');
+					const CleanWebpackPlugin = require('clean-webpack-plugin');
 
+					module.exports = {
+						entry: {
+							app: './src/index.js',
+							print: './src/print.js'
+						},
+						devtool: 'inline-source-map',
+						plugins: [
+							new CleanWebpackPlugin(['dist']),
+							new HtmlWebpackPlugin({
+								title: 'Output Management'
+							})
+						],
+						output: {
+							filename: '[name].bundle.js',
+							path: path.resolve(__dirname, 'dist'),
+				+     publicPath: '/'
+						}
+					};
+		4. 在 webpack-demo/server.js	
+				/**
+				 * 引入 express 
+				 * 引入 webpack
+				 * 引入 webpack-dev-middleware
+				 */
+				const express = require('express');
+				const webpack = require('webpack');
+				const webpackDevMiddleware = require('webpack-dev-middleware');
 
+				const app = express();
+				const config = require('./webpack.config.js')
+				const compiler = webpack(config);
 
+				/**
+				 * 告诉 express 使用 webpack-dev-middleware(中间件) 并使用 webpack.config.js 配置文件作为基础。
+				 */
+				app.use(webpackDevMiddleware(compiler, {
+					publicPath: config.output.publicPath
+				}))
+
+				/**
+				 * 为端口 3000 上的文件提供服务
+				 */
+				app.listen(3000, function () { 
+					console.log('example app listening port 3000!\n');
+				})
+		5. 在 package.json 中添加 npm script
+				{
+						"name": "development",
+						"version": "1.0.0",
+						"description": "",
+						"main": "webpack.config.js",
+						"scripts": {
+							"test": "echo \"Error: no test specified\" && exit 1",
+							"watch": "webpack --watch",
+							"start": "webpack-dev-server --open",
+				+     "server": "node server.js",
+							"build": "webpack"
+						},
+						"keywords": [],
+						"author": "",
+						"license": "ISC",
+						"devDependencies": {
+							"clean-webpack-plugin": "^0.1.16",
+							"css-loader": "^0.28.4",
+							"csv-loader": "^2.1.1",
+							"express": "^4.15.3",
+							"file-loader": "^0.11.2",
+							"html-webpack-plugin": "^2.29.0",
+							"style-loader": "^0.18.2",
+							"webpack": "^3.0.0",
+							"webpack-dev-middleware": "^1.12.0",
+							"xml-loader": "^1.2.1"
+						}
+					}
+		6. 运行 npm run server 命令,打开浏览器 跳转到 http://localhost:3000 查看程序运行
+七. 模块热替换
+	(1). 作用
+		1. 模块热替换(Hot Module Replacement 或 HMR)是 webpack 提供的最有用的功能之一。
+		2. 它允许在运行时更新各种模块，而无需进行完全刷新。
+		3. HMR 不适用于生产环境，这意味着它应当只在开发环境使用。
+	(2). 启动 HMR(模块热替换)
+		1. 更新 webpack-dev-server 的配置
+			在 webpack.config.js中 devServer 添加 hot:true 选项 
+		2. 使用 webpack 内置的 HMR 插件
+			在 webpack.config.js中 plugins 添加 new webpack.NamedModulesPlugin() 和 new webpack.HotModuleReplacementPlugin()
+		3. 删除掉 print.js 的入口起点，因为它现在正被 index.js 模块使用
+			在 webpack.config.js中 entry 入口中删除 print 
+		4. webpack.config.js 配置
+				const path = require('path');
+				const HtmlWebpackPlugin = require('html-webpack-plugin');
+				const CleanWebpackPlugin = require('clean-webpack-plugin');
+			+ const webpack = require('webpack');
+
+				module.exports = {
+					entry: {
+			-      app: './src/index.js',
+			-      print: './src/print.js'
+			+      app: './src/index.js'
+					},
+					devtool: 'inline-source-map',
+					devServer: {
+						contentBase: './dist',
+			+     hot: true
+					},
+					plugins: [
+						new CleanWebpackPlugin(['dist']),
+						new HtmlWebpackPlugin({
+							title: 'Hot Module Replacement'
+						}),
+			+     new webpack.NamedModulesPlugin(),
+			+     new webpack.HotModuleReplacementPlugin()
+					],
+					output: {
+						filename: '[name].bundle.js',
+						path: path.resolve(__dirname, 'dist'),
+						publicPath: '/'
+					}
+				};
+		5. 运行 npm start 命令启动并运行 dev server, 查看控制台输出
+		6. 注意:
+			我们还添加了 NamedModulesPlugin，以便更容易查看要修补(patch)的依赖 
+		7. 可以通过命令来修改 webpack-dev-server 的配置：webpack-dev-server --hotOnly
 
 
 

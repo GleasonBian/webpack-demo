@@ -24,3 +24,13 @@ function component() {
 }
 
 document.body.appendChild(component())
+
+/**
+ * 模块热替换
+ */
+ if (module.hot) {
+   module.hot.accept('./print.js', function() {
+     console.log('Accepting the updated printMe module!');
+     printMe();
+   })
+ }

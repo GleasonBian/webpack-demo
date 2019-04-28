@@ -12,27 +12,34 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    // -app: './src/index.js',
-    // -print: './src/print.js'
     app: './src/index.js'
   },
-  devtool: 'inline-source-map',
-  // devServer 实时重新加载
+  devtool: 'inline-source-map', // source map 选项 追踪到错误和警告在源代码中的原始位置
+
+  /**
+   *  devServer 实时重新加载
+   * 告知 webpack-dev-server，在 localhost:8080 下建立服务，将 dist 目录下的文件，作为可访问文件。
+   */
   devServer: { 
-    contentBase: './dist',
+    contentBase: './dist', // 对外提供的访问内容的路径
     hot: true //启用 webpack 的模块热替换
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Output management'
     }),
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin(), // 清除 dist 文件夹
     new webpack.NamedModulesPlugin(), // 在热加载时直接返回更新文件名, 而不是文件的id
     new webpack.HotModuleReplacementPlugin() // webpack 模块热替换插件
   ],
+  /**
+   * webpack-dev-middleware中间件 publicPath 配置: 
+   *  publicPath 也会在服务器脚本用到，以确保文件资源能够在 http://localhost:3000 下正确访问 端口
+   *  在 server.js 中配置端口 使用 npm run server 启用服务
+   */
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath:'/'
+    publicPath: '/' 
   },
 }
