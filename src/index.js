@@ -6,6 +6,7 @@
 
 import _ from 'lodash'
 import printMe from './print.js'
+import './styles.css'
 
 /**
  * 创建 函数 component
@@ -17,20 +18,22 @@ function component() {
   element.innerHTML = _.join(['hello', 'webpack'], ' ')
 
   btn.innerHTML = 'Click me and check the console!';
-  btn.onclick = printMe;
+  btn.onclick = printMe; // onclick事件绑定到原始printMe函数
 
   element.appendChild(btn)
   return element
 }
-
-document.body.appendChild(component())
+let element = component() //当 print.js 改变导致页面重新渲染时，重新获取渲染的元素
+document.body.appendChild(element)
 
 /**
  * 模块热替换
  */
- if (module.hot) {
-   module.hot.accept('./print.js', function() {
-     console.log('Accepting the updated printMe module!');
-     printMe();
-   })
- }
+if (module.hot) {
+  module.hot.accept('./print.js', function () {
+    console.log('Accepting the updated printMe module!');
+    document.body.removeChild(element);
+    element = component(); // 重新渲染页面后，component 更新 click 事件处理
+    document.body.appendChild(element);
+  })
+}

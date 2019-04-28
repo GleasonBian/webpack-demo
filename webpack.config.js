@@ -20,15 +20,26 @@ module.exports = {
    *  devServer 实时重新加载
    * 告知 webpack-dev-server，在 localhost:8080 下建立服务，将 dist 目录下的文件，作为可访问文件。
    */
-  devServer: { 
+  devServer: {
     contentBase: './dist', // 对外提供的访问内容的路径
     hot: true //启用 webpack 的模块热替换
+  },
+  /**
+   * HMR 修改样式表
+   */
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Output management'
     }),
-    new CleanWebpackPlugin(), // 清除 dist 文件夹
+    new CleanWebpackPlugin(), // 清除 dist 文件夹下 编译文件
     new webpack.NamedModulesPlugin(), // 在热加载时直接返回更新文件名, 而不是文件的id
     new webpack.HotModuleReplacementPlugin() // webpack 模块热替换插件
   ],
@@ -40,6 +51,6 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/' 
+    publicPath: '/'
   },
 }
