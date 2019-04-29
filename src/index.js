@@ -7,7 +7,10 @@
  */
 
 import { cube } from './math.js';
-
+console.log("process.env.NODE_ENV: ",process.env.NODE_ENV);
+if (process.env.NODE_ENV !== 'production') {
+  console.log('看起来我们正在开发模式中！');
+}
 function component() {
   var element = document.createElement('pre');
 
