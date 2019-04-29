@@ -9,25 +9,15 @@
 import { cube } from './math.js';
 
 function component() {
-  let element = document.createElement('pre');
+  var element = document.createElement('pre');
 
   element.innerHTML = [
     'hello webpack',
     '5 cubed is equal to' + cube(5)
-  ].join('\n\n');
+  ].join('\n\n')
 
-  return element
-}
-document.body.appendChild(component())
+  return element;
 
-/**
- * 模块热替换
- 
-if (module.hot) {
-  module.hot.accept('./print.js', function () {
-    console.log('Accepting the updated printMe module!');
-    document.body.removeChild(element);
-    element = component(); // 重新渲染页面后，component 更新 click 事件处理
-    document.body.appendChild(element);
-  })
-}*/
+};
+
+document.body.appendChild(component());
