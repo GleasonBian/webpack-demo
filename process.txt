@@ -4,7 +4,7 @@
   1. 特定版本 或者 指定版本
     npm install --save-dev webpack
     npm install --save-dev webpack@<version>
-  2. webpack4+ 需要安装webpack-cli
+  2. webpack4+ 需要安装 webpack-cli
     npm install --save-dev webpack-cli
   3. webpack 通过运行一个或多个 npm scripts，会在本地 node_modules 目录中查找安装的 webpack
 三. 起步
@@ -34,7 +34,7 @@
 						return element
 					}
 					document.body.appendChild(component())
-		(2). 在 index.js 中引入 lodash 和 src/index.js
+		(2). 在 index.js 中添加脚本引入 lodash 和 index.js
 					<!DOCTYPE html>
 					<html lang="en">
 					<head>
@@ -129,7 +129,7 @@
 			按 esc 退出编辑状态
 			输入 :wq 保存 退出
 			git add .gitignore 
-			git commit -m "增加忽略文件 dist/")
+			git commit -m "增加忽略文件 dist/"
 			git push origin master
 	8. webpack-demo/package.json 增加 build 脚本
 		  {
@@ -213,7 +213,7 @@
 					};
 		(3). webpack-demo/src 添加 icon.png (图像任意)
 		(4). 修改 webpack-demo/index.js 			
-		  import _ from 'lodash';
+				import _ from 'lodash';
 				import './style.css';
 			+ import Icon from './icon.png';
 
@@ -371,7 +371,7 @@
 					}
 
 					document.body.appendChild(component());
-	6. 回退处理 (为管理输入做准备)
+	6. 回退处理 (为接下来的管理输出做准备,因此我们会进行一些清理工作)
 			webpack-demo
 				|- package.json
 				|- webpack.config.js
@@ -524,8 +524,9 @@
 					生成的包将被重命名在一个构建中，然而 index.html 文件仍然会引用旧的名字。
 			 解决: 
 					使用 HtmlWebpackPlugin 来解决这个问题。
-	(7). 安装htmlWebpackPlugin 
-		安装 html-webpack-plugin 插件 npm install --save-dev html-webpack-plugin 
+				
+	(7). 安装 html-webpack-plugin 插件 
+		npm install --save-dev html-webpack-plugin 
 	(8). 配置 webpack.config.js
 				const path = require('path');
 			+ const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -545,6 +546,7 @@
 						path: path.resolve(__dirname, 'dist')
 					}
 				};
+
 	(10). 清理 /dist 文件夹
 		安装 clean-webpack-plugin 插件 
 				npm install clean-webpack-plugin --save-dev
@@ -1017,9 +1019,158 @@
 						}
 			4.3: 将 body 上的样式修改为 background: red;
 				应该可以 立即 看到 页面背景颜色随之而改变 无需完全刷新
+八. tree shaking
+	(1). 作用
+		 ree shaking 是术语用于移除 JavaScript 上下文中的未引用代码(dead-code:死代码)
+	(2). webpack4 扩展了检测功能,通过 package.json 的 'sideEffects' 属性作为标记, 向 compiler 提供提示,
+			 表明项目中的哪些文件是 "pure(纯的 ES2015 模块)"，由此可以安全地删除文件中未使用的部分。
+	(3). 使用 tree shaking 实例
+		1. 增加 src/math.js 文件
+			webpack-demo
+				|- package.json
+				|- webpack.config.js
+				|- /dist
+					|- bundle.js
+					|- index.html
+				|- /src
+					|- index.js
+				+ |- math.js
+				|- /node_modules
+		2. 更新入口脚本，使用其中一个新方法，并且为了简单，将 lodash 删除;
+九. 环境构建
+	(1). 配置
+		1. 作用
+			通过 '通用' 配置, 使用 webpack-merge 工具,实现 不必再环境特定的配置中重复代码
+		2. 安装 webpack-merge 工具
+			npm install --save-dev webpack-merge
+		3. 删除 webpack.config.js 文件
+		4. 新增 webpack.common.js, webpack.dev.js, webpack.prod.js, package.json 文件
+			4.1. webpack.common.js
+				+ const path = require('path');
+				+ const CleanWebpackPlugin = require('clean-webpack-plugin');
+				+ const HtmlWebpackPlugin = require('html-webpack-plugin');
+				+
+				+ module.exports = {
+				+   entry: {
+				+     app: './src/index.js'
+				+   },
+				+   plugins: [
+				+     new CleanWebpackPlugin(['dist']),
+				+     new HtmlWebpackPlugin({
+				+       title: 'Production'
+				+     })
+				+   ],
+				+   output: {
+				+     filename: '[name].bundle.js',
+				+     path: path.resolve(__dirname, 'dist')
+				+   }
+				+ };
+			4.2. webpack.dev.js
+				+ const merge = require('webpack-merge');
+				+ const common = require('./webpack.common.js');
+				+
+				+ module.exports = merge(common, {
+				+   devtool: 'inline-source-map',
+				+   devServer: {
+				+     contentBase: './dist'
+				+   }
+				+ });
+			4.3. webpack.prod.js
+				+ const merge = require('webpack-merge');
+				+ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+				+ const common = require('./webpack.common.js');
+				+
+				+ module.exports = merge(common, {
+				+   plugins: [
+				+     new UglifyJSPlugin()
+				+   ]
+				+ });
+			4.4. package.json
+					  {
+							"name": "development",
+							"version": "1.0.0",
+							"description": "",
+							"main": "webpack.config.js",
+							"scripts": {
+					-     "start": "webpack-dev-server --open",
+					+     "start": "webpack-dev-server --open --config webpack.dev.js",
+					-     "build": "webpack"
+					+     "build": "webpack --config webpack.prod.js"
+							},
+							"keywords": [],
+							"author": "",
+							"license": "ISC",
+							"devDependencies": {
+								"clean-webpack-plugin": "^0.1.17",
+								"css-loader": "^0.28.4",
+								"csv-loader": "^2.1.1",
+								"express": "^4.15.3",
+								"file-loader": "^0.11.2",
+								"html-webpack-plugin": "^2.29.0",
+								"style-loader": "^0.18.2",
+								"webpack": "^3.0.0",
+								"webpack-dev-middleware": "^1.12.0",
+								"webpack-dev-server": "^2.9.1",
+								"webpack-merge": "^4.1.0",
+								"xml-loader": "^1.2.1"
+							}
+						}
+		5. 文件结构
+			  webpack-demo
+					|- package.json
+				- |- webpack.config.js
+				+ |- webpack.common.js
+				+ |- webpack.dev.js
+				+ |- webpack.prod.js
+					|- /dist
+					|- /src
+						|- index.js
+						|- math.js
+					|- /node_modules
+		6. 随意运行这些脚本，然后查看输出结果的变化
+	(2). source map 
+		1. 作用
+			我们鼓励你在生产环境中启用 source map，因为它们对调试源码(debug)和运行基准测试(benchmark tests)很有帮助。
+		2. 注意
+			devtool: 在生产环境中使用 source-map 选项，在开发环境中使用 inline-source-map 选项
+			原因: 避免在生产中使用 inline-*** 和 eval-***，因为它们可以增加 bundle 大小，并降低整体性能
+		3. webpack.prod.js
+			  const merge = require('webpack-merge');
+				const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+				const common = require('./webpack.common.js');
 
+				module.exports = merge(common, {
+			+   devtool: 'source-map',
+					plugins: [
+			-     new UglifyJSPlugin()
+			+     new UglifyJSPlugin({
+			+       sourceMap: true
+			+     })
+					]
+				});
+	(3). 指定环境
+		1. 作用
+			许多 library 将通过与 process.env.NODE_ENV 环境变量关联，以决定 library 中应该引用哪些内容。
+			当使用 process.env.NODE_ENV === 'production' 时，一些 library 可能针对具体用户的环境进行代码优化，
+			从而删除或添加一些重要代码。我们可以使用 webpack 内置的 DefinePlugin 为所有的依赖定义这个变量
+		2. webpack.prod.js
+			+ const webpack = require('webpack');
+				const merge = require('webpack-merge');
+				const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+				const common = require('./webpack.common.js');
 
-
+				module.exports = merge(common, {
+					devtool: 'source-map',
+					plugins: [
+						new UglifyJSPlugin({
+							sourceMap: true
+			-     })
+			+     }),
+			+     new webpack.DefinePlugin({
+			+       'process.env.NODE_ENV': JSON.stringify('production')
+			+     })
+					]
+				});
 
 
 			
