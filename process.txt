@@ -845,10 +845,178 @@
 		6. 注意:
 			我们还添加了 NamedModulesPlugin，以便更容易查看要修补(patch)的依赖 
 		7. 可以通过命令来修改 webpack-dev-server 的配置：webpack-dev-server --hotOnly
+	(3). 通过 Node.js API
+		1. 说明
+			当使用 webpack dev server 和 Node.js API 时，不要将 dev server 选项放在 webpack 配置对象(webpack config object)中。
+			而是，在创建选项时，将其作为第二个参数传递。例如：
+			new WebpackDevServer(compiler, options)
 
+			想要启用 HMR，还需要修改 webpack 配置对象，使其包含 HMR 入口起点。
+			webpack-dev-server package 中具有一个叫做 addDevServerEntrypoints 的方法，你可以通过使用这个方法来实现。
+		2. 关于如何使用 addDevServerEntrypoints 的一个小例子：
+			2.1: 创建 dev-server.js
+				const webpackDevServer = require('webpack-dev-server');
+				const webpack = require('webpack');
 
+				const config = require('./webpack.config.js');
+				const options = {
+					contentBase: './dist',
+					hot: true,
+					host: 'localhost'
+				};
 
+				webpackDevServer.addDevServerEntrypoints(config, options);
+				const compiler = webpack(config);
+				const server = new webpackDevServer(compiler, options);
 
+				server.listen(5000, 'localhost', () => {
+					console.log('dev server listening on port 5000');
+				});
+			2.2: 更改 src/index.js 文件
+					import _ from 'lodash';
+					import printMe from './print.js';
+
+					function component() {
+						var element = document.createElement('div');
+						var btn = document.createElement('button');
+
+						element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+
+						btn.innerHTML = 'Click me and check the console!';
+						btn.onclick = printMe;  // onclick 事件绑定原始的 printMe 函数上
+
+						element.appendChild(btn);
+
+						return element;
+					}
+
+				- document.body.appendChild(component());
+				+ let element = component(); // 当 print.js 改变导致页面重新渲染时，重新获取渲染的元素
+				+ document.body.appendChild(element);
+
+					if (module.hot) {
+						module.hot.accept('./print.js', function() {
+							console.log('Accepting the updated printMe module!');
+				-     printMe();
+				+     document.body.removeChild(element);
+				+     element = component(); // 重新渲染页面后，component 更新 click 事件处理
+				+     document.body.appendChild(element);
+						})
+					}
+			2.3: 修改 package.json 文件, 添加 "devserver": "node dev-server.js" npm script
+				{
+					"name": "webpack-demo",
+					"version": "1.0.0",
+					"description": "",
+					"private": true,
+					"scripts": {
+						"test": "echo \"Error: no test specified\" && exit 1",
+						"build": "webpack",
+						"watch": "webpack --watch",
+						"start": "webpack-dev-server --open",
+						"server": "node server.js",
+				+ 	"devserver": "node dev-server.js"
+					},
+					"keywords": [],
+					"author": "gleasonBian",
+					"license": "ISC",
+					"devDependencies": {
+						"clean-webpack-plugin": "^2.0.1",
+						"css-loader": "^2.1.1",
+						"csv-loader": "^3.0.2",
+						"express": "^4.16.4",
+						"file-loader": "^3.0.1",
+						"html-webpack-plugin": "^3.2.0",
+						"papaparse": "^4.5.0",
+						"style-loader": "^0.23.1",
+						"webpack": "^4.30.0",
+						"webpack-cli": "^3.3.1",
+						"webpack-dev-middleware": "^3.6.2",
+						"webpack-dev-server": "^3.3.1",
+						"xml-loader": "^1.2.1"
+					},
+					"dependencies": {
+						"lodash": "^4.17.11"
+					}
+				}
+			2.4: 运行 npm run devserver 命令
+	(4). HMR 修改样式表
+		1. 作用
+			借助于 style-loader 的帮助，CSS 的模块热替换实际上是相当简单的。当更新 CSS 依赖模块时，
+			此 loader 在后台使用 module.hot.accept 来修补(patch) <style> 标签。
+		2. 安装 style-loader 和 css-loader
+			npm install --save-dev style-loader css-loader
+		3. 更新 webpack 的配置，让这两个 loader 生效
+					const path = require('path');
+					const HtmlWebpackPlugin = require('html-webpack-plugin');
+					const webpack = require('webpack');
+
+					module.exports = {
+						entry: {
+							app: './src/index.js'
+						},
+						devtool: 'inline-source-map',
+						devServer: {
+							contentBase: './dist',
+							hot: true
+						},
+				+   module: {
+				+     rules: [
+				+       {
+				+         test: /\.css$/,
+				+         use: ['style-loader', 'css-loader']
+				+       }
+				+     ]
+				+   },
+						plugins: [
+							new CleanWebpackPlugin(['dist'])
+							new HtmlWebpackPlugin({
+								title: 'Hot Module Replacement'
+							}),
+							new webpack.HotModuleReplacementPlugin()
+						],
+						output: {
+							filename: '[name].bundle.js',
+							path: path.resolve(__dirname, 'dist')
+						}
+					};
+		4. 热加载样式表
+			4.1: 增加 src/styles.css 文件
+				body {
+					background: blue;
+				}
+			4.2: 修改 index.js 文件
+						import _ from 'lodash';
+						import printMe from './print.js';
+					+ import './styles.css';
+
+						function component() {
+							var element = document.createElement('div');
+							var btn = document.createElement('button');
+
+							element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+
+							btn.innerHTML = 'Click me and check the console!';
+							btn.onclick = printMe;  // onclick event is bind to the original printMe function
+
+							element.appendChild(btn);
+
+							return element;
+						}
+
+						let element = component();
+						document.body.appendChild(element);
+
+						if (module.hot) {
+							module.hot.accept('./print.js', function() {
+								console.log('Accepting the updated printMe module!');
+								document.body.removeChild(element);
+								element = component(); // Re-render the "component" to update the click handler
+								document.body.appendChild(element);
+							})
+						}
+			4.3: 将 body 上的样式修改为 background: red;
+				应该可以 立即 看到 页面背景颜色随之而改变 无需完全刷新
 
 
 
