@@ -49,8 +49,9 @@ module.exports = {
    *  在 server.js 中配置端口 使用 npm run server 启用服务
    */
   output: {
-    filename: '[name].bundle.js', // [name] 生成的名字为入口 entry 的 key 当前执行 npm run build 在 dist 文件下生成 app.bundle.js 文件
+    filename: 'bundle.js', // [name] 生成的名字为入口 entry 的 key 当前执行 npm run build 在 dist 文件下生成 app.bundle.js 文件
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/'
   },
+  mode: "production"
 }

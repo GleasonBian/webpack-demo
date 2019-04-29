@@ -1,7 +1,5 @@
 
 
-
-
 /**
  * @export square
  * @param {*} x
